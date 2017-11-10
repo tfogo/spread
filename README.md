@@ -12,6 +12,10 @@ $ go get github.com/tfogo/spread
 
 ## Usage
 
+```
+$ spread <command1> <command2> <command3>...
+```
+
 Say we're in a directory `A` with three subdirectories which all have `README.md` files:
 
 ```
@@ -30,7 +34,15 @@ To append some text to each `README.md` file at once, run:
 $ spread 'echo text >> README.md'
 ```
 
-The argument to `spread` is run in each subdirectory.
+The arguments to `spread` are run in each subdirectory.
+
+### Running multiple commands
+
+Spread will run commands in sequence on each subdirectory. If any command in the sequence fails, the rest of the commands will not run. Therefore, you can run commands based on the exit code of previous commands. For example, running tests:
+
+```
+$ spread 'npm test' 'git push origin master'
+```
 
 ### Excluding subdirectories
 
@@ -42,7 +54,7 @@ $ spread -x dir1 'echo text >> README.md'
 
 `-x` can take a glob such as `dir{1,2}`.
 
-## Man Reference
+## Reference
 
 ```
 NAME:

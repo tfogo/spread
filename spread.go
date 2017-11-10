@@ -29,9 +29,8 @@ func main() {
 }
 
 func action(c *cli.Context) error {
-  command := c.Args().Get(0)
+  commands := c.Args()
   exclude := c.String("exclude")
-
 
   files, err := ioutil.ReadDir(".")
   if err != nil {
@@ -39,7 +38,6 @@ func action(c *cli.Context) error {
   }
 
   errors := make([]error, 0, len(files))
-  log.Print(len(files))
 
   for _, file := range files {
 
@@ -47,21 +45,32 @@ func action(c *cli.Context) error {
 
     if file.IsDir() && !excluded {
       // fmt.Println(file.Name())
-
-      cmd := exec.Command("sh", "-c", command)
-      cmd.Dir = file.Name()
-      cmd.Stdout = os.Stdout
-      cmd.Stderr = os.Stderr
-
-      err := cmd.Run()
-
-      if err != nil {
-        errors = append(errors, err)
+      for _, command := range commands {
+        err := runCmd(command, file)
+        if err != nil {
+          errors = append(errors, err)
+          break
+        }
       }
     }
   }
 
-  result := cli.NewMultiError(errors...)
-  log.Print(result)
-  return result
+  if len(errors) > 0 {
+    return cli.NewMultiError(errors...)
+  } else {
+    return nil
+  }
+
+}
+
+func runCmd(command string, file os.FileInfo) error {
+
+  cmd := exec.Command("sh", "-c", command)
+  cmd.Dir = file.Name()
+  cmd.Stdout = os.Stdout
+  cmd.Stderr = os.Stderr
+
+  err := cmd.Run()
+
+  return err
 }
