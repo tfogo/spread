@@ -1,7 +1,6 @@
 package main
 
 import (
-  "fmt"
   "os"
   "os/exec"
   "io/ioutil"
@@ -22,11 +21,6 @@ func main() {
       Value: "",
       Usage: "Glob of directories to exclude",
     },
-    cli.StringFlag {
-      Name: "setup, s",
-      Value: "",
-      Usage: "Setup command to run before running commands in subdirectories",
-    },
   }
 
   app.Action = action
@@ -37,37 +31,37 @@ func main() {
 func action(c *cli.Context) error {
   command := c.Args().Get(0)
   exclude := c.String("exclude")
-  setup := c.String("setup")
 
-  setupCmd := exec.Command("sh", "-c", setup)
-  setupCmd.Stdout = os.Stdout
-  setupCmd.Stderr = os.Stderr
-  err := setupCmd.Run()
-  if err != nil {
-    log.Fatal(err)
-  }
 
   files, err := ioutil.ReadDir(".")
   if err != nil {
     log.Fatal(err)
   }
 
+  errors := make([]error, 0, len(files))
+  log.Print(len(files))
+
   for _, file := range files {
 
     excluded, _ := filepath.Match(exclude, file.Name())
 
     if file.IsDir() && !excluded {
-      fmt.Println(file.Name())
+      // fmt.Println(file.Name())
+
       cmd := exec.Command("sh", "-c", command)
       cmd.Dir = file.Name()
       cmd.Stdout = os.Stdout
       cmd.Stderr = os.Stderr
+
       err := cmd.Run()
+
       if err != nil {
-        log.Fatal(err)
+        errors = append(errors, err)
       }
     }
   }
 
-  return nil
+  result := cli.NewMultiError(errors...)
+  log.Print(result)
+  return result
 }
