@@ -22,6 +22,8 @@ $ go get github.com/tfogo/spread
 $ spread <command1> <command2> <command3>...
 ```
 
+### Example
+
 Say we're in a directory `A` with three subdirectories which all have `README.md` files:
 
 ```
