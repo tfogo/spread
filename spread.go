@@ -13,13 +13,27 @@ import (
 func main() {
   app := cli.NewApp()
   app.Name = "spread"
-  app.Usage = "Run commands in subdirectories"
+  app.Usage = "Run scripts and commands in multiple directories at once. \n\nWEBSITE: \n\n   github.com/tfogo/spread\n\nDESCRIPTION:\n\n   Spread is designed to do one thing and do it well. It is a simpler alternative to GNU Parallel. Spread will run commands in sequence on each subdirectory. If any command in the sequence fails, the rest of the commands will not run. Therefore, you can run commands based on the exit code of previous commands. \n\nEXAMPLES: \n\n   spread 'npm test' 'git push origin master'"
+  app.Version = "v1.0.1"
+  app.UsageText = "spread [global options] [your commands]"
+  app.HideHelp = true
+
+  app.Authors = []cli.Author{
+    cli.Author{
+      Name:  "Tim Fogarty",
+      Email: "tim@tfogo.com",
+    },
+  }
 
   app.Flags = []cli.Flag {
     cli.StringFlag {
       Name: "exclude, x",
       Value: "",
-      Usage: "Glob of directories to exclude",
+      Usage: "glob of directories to exclude",
+    },
+    cli.BoolFlag {
+      Name: "help, h",
+      Usage: "show help",
     },
   }
 
@@ -29,6 +43,11 @@ func main() {
 }
 
 func action(c *cli.Context) error {
+  if c.Bool("help") {
+    cli.ShowAppHelp(c)
+    return nil
+  }
+
   commands := c.Args()
   exclude := c.String("exclude")
 
