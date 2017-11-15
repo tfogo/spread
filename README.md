@@ -19,7 +19,7 @@ $ go get github.com/tfogo/spread
 ## Usage
 
 ```
-$ spread <command1> <command2> <command3>...
+$ spread <commands>
 ```
 
 ### Example
