@@ -4,6 +4,12 @@ A simple command to help running scripts/commands in multiple subdirectories. Sp
 
 ## Installation
 
+Using Homebrew:
+
+```
+$ brew install tfogo/tools/spread
+```
+
 Using go:
 
 ```
