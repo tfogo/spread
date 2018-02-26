@@ -1,6 +1,7 @@
-<img src="spread-logo-text.svg" width="40%" >
+<img src="spread-logo-text.svg" width="50%" >
 
-A simple command to help running scripts/commands in multiple subdirectories. Spread is designed to do one thing and do it well. It is a simpler alternative to GNU Parallel.
+A simple command to run scripts/commands in multiple directories in sequence. Spread is designed to do one thing and do it well. It is a simpler alternative to GNU Parallel.
+
 
 ## Installation
 
@@ -16,11 +17,13 @@ Using go:
 $ go get github.com/tfogo/spread
 ```
 
+
 ## Usage
 
 ```
-$ spread <commands>
+$ spread [command] [directories...]
 ```
+
 
 ### Example
 
@@ -36,49 +39,55 @@ A
     └── README.md
 ```
 
-To append some text to each `README.md` file at once, run:
+To append some text to each `README.md` file, run:
 
 ```
 $ spread 'echo text >> README.md'
 ```
 
-The arguments to `spread` are run in each subdirectory.
+The first argument to `spread` is the command to run in each subdirectory.
+
+
+### Specifying directories
+
+By default `spread` will run the command in all the subdirectories of the present working directory. You can specify directories in which to run the command by adding further arguments:
+
+```
+$ spread 'echo text >> README.md' dir1 dir2
+```
+
 
 ### Running multiple commands
 
-Spread will run commands in sequence on each subdirectory. If any command in the sequence fails, the rest of the commands will not run. Therefore, you can run commands based on the exit code of previous commands. For example, running tests:
+A common use is chaining  multiple commands based on the exit code of previous commands using `&&`. For example, running tests then pushing to a git remote:
 
 ```
-$ spread 'npm test' 'git push origin master'
+$ spread 'npm test && git push origin master'
 ```
 
-### Excluding subdirectories
 
-To exclude subdirectories, use `-x`:
+### No-ops
 
-```
-$ spread -x dir1 'echo text >> README.md'
-```
-
-`-x` can take a glob such as `dir{1,2}`.
-
-## Reference
+If you need to run a no-op, use an empty string, a colon, or `true` as the first argument.
 
 ```
-NAME:
-   spread - Run commands in subdirectories
-
-USAGE:
-   spread [global options] command [command options] [arguments...]
-
-VERSION:
-   0.0.0
-
-COMMANDS:
-   help, h  Shows a list of commands or help for one command
-
-GLOBAL OPTIONS:
-   --exclude value, -x value  Glob of directories to exclude
-   --help, -h                 show help
-   --version, -v              print the version
+$ spread ''
+$ spread :
+$ spread true
 ```
+
+
+### Help
+
+To view the help, run `spread` without any arguments or pass the `--help` or `-h` flags.
+
+
+## License (MIT)
+
+Copyright 2018 Tim Fogarty
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
