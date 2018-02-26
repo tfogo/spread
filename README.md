@@ -1,4 +1,4 @@
-<img src="spread-logo-text.svg" width="50%" >
+<img src="spread-logo-text.svg" width="40%" >
 
 A simple command to run scripts/commands in multiple directories in sequence. Spread is designed to do one thing and do it well. It is a simpler alternative to GNU Parallel.
 
