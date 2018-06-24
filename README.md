@@ -1,6 +1,6 @@
 <img src="spread-logo-text.svg" width="40%" >
 
-A simple command to run scripts/commands in multiple directories in sequence. Spread is designed to do one thing and do it well.
+A simple command to run scripts/commands in multiple directories in sequence. Spread is designed to do one thing and do it well...
 
 
 ## Installation
